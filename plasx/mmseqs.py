@@ -504,7 +504,7 @@ def read_db_fasta(path, rettype=None):
     in the mmseqs '_h' header file"""
 
     headers = read_h(str(path)+'_h')
-    seqs = read_h(str(path), dtype=np.str)
+    seqs = read_h(str(path), dtype=str)
     
     fasta_dict = dict(zip(headers, seqs))
     
@@ -793,7 +793,7 @@ def clu_to_sp(clu):
 
     clu_reps = clu['representative'].astype('category')
 
-    clu_sp = scipy.sparse.coo_matrix((np.ones(clu.shape[0], np.bool),
+    clu_sp = scipy.sparse.coo_matrix((np.ones(clu.shape[0], bool),
                                       (clu_reps.cat.codes, clu['member'].values))).tocsr()
 
     return clu_sp, clu_reps.cat.categories
@@ -1218,14 +1218,14 @@ def create_contig_2_clusters(headers, clu, unique_table=None, method='multiply')
 
         # Convert to integer, so that the matrix multiplication product
         # will be integer (it might be incorrectly boolean, if everything were left as boolean)
-        assert np.issubdtype(clu_sp.S.dtype, np.bool) or np.issubdtype(clu_sp.S.dtype, np.integer)
+        assert np.issubdtype(clu_sp.S.dtype, np.bool_) or np.issubdtype(clu_sp.S.dtype, np.integer)
         clu_sp.S = clu_sp.S.astype(np.int32)
 
         # Check dimensions
         assert headers_sp.S.shape[1] == clu_sp.S.shape[1]
 
         if unique_table is None:
-            unique_sp = scipy.sparse.identity(headers_sp.S.shape[1], dtype=np.bool)
+            unique_sp = scipy.sparse.identity(headers_sp.S.shape[1], dtype=bool)
         else:
             # If a dask dataframe, then compute into a pd.DataFrame
             if not isinstance(unique_table, pd.DataFrame):

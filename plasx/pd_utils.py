@@ -765,7 +765,7 @@ def remove_unused_categories(df, inplace=False, columns=None):
         df = df.copy()
 
     if isinstance(df, pd.Series):
-        if pd.api.types.is_categorical_dtype(df):
+        if isinstance(df.dtype, pd.CategoricalDtype):
             df = df.cat.remove_unused_categories()
 
     else:
@@ -773,7 +773,7 @@ def remove_unused_categories(df, inplace=False, columns=None):
             columns = df.columns
 
         for c in columns:
-            if pd.api.types.is_categorical_dtype(df[c]):
+            if isinstance(df[c].dtype, pd.CategoricalDtype):
                 df[c] = df[c].cat.remove_unused_categories()
 
     return df
@@ -796,7 +796,7 @@ def fast_duplicated(df, subset=None):
     if subset is None:
         subset = df.columns
 #    df_codes = pd.DataFrame({c : df[c] if df[c].dtype.name!='category' else df[c].cat.codes for c in subset})
-    df_codes = pd.DataFrame({c : df[c].cat.codes if pd.api.types.is_categorical_dtype(df[c]) else df[c].values for c in subset})
+    df_codes = pd.DataFrame({c : df[c].cat.codes if isinstance(df[c].dtype, pd.CategoricalDtype) else df[c].values for c in subset})
 
     is_duplicated = df_codes.duplicated().values
     return is_duplicated

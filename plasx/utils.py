@@ -361,7 +361,7 @@ def downcast_uint(x):
 
     if x.size==0:
         # This is an empty array, so use np.uint8
-        return x.astype(np.bool)
+        return x.astype(bool)
 
     max_val = x.max()
     
@@ -369,7 +369,7 @@ def downcast_uint(x):
     assert max_val >= 0
       
     if max_val <= 1:
-        return x.astype(np.bool)
+        return x.astype(bool)
     elif max_val <= (2**8 - 1):
         return x.astype(np.uint8)
     elif max_val <= (2**16 - 1):
